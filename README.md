@@ -61,6 +61,7 @@ docker-compose up -d
 
 - `POST /api/v1/conversations` — ingest conversation
 - `POST /api/v1/evaluations/{conversationId}` — re-run evaluation (`force=true` bypasses cache)
+- `POST /api/v1/evaluations/batch` — batch re-evaluate conversations
 - `GET /api/v1/evaluations/{conversationId}` — list evaluations
 - `GET /api/v1/evaluations/{conversationId}/latest` — latest evaluation (cached)
 - `GET /api/v1/suggestions/{conversationId}` — latest improvement suggestions

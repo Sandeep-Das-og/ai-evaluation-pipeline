@@ -18,6 +18,8 @@ import java.util.UUID;
 
 @Service
 public class EvaluationService {
+    private static final double AGREEMENT_THRESHOLD = 0.7;
+    private static final double CONFIDENCE_THRESHOLD = 0.6;
     private final List<Evaluator> evaluators;
     private final EvaluationRepository evaluationRepository;
     private final ConversationRepository conversationRepository;
@@ -80,7 +82,9 @@ public class EvaluationService {
         }
 
         evaluation.setOverallScore(calculateOverall(evaluation));
-        evaluation.setAnnotatorAgreement(agreementService.computeAgreement(conversation.getFeedback()));
+        Double agreement = agreementService.computeAgreement(conversation.getFeedback());
+        evaluation.setAnnotatorAgreement(agreement);
+        addAnnotationIssues(conversation, issues, agreement);
 
         for (IssueDetected issue : issues) {
             issue.setEvaluation(evaluation);
@@ -143,5 +147,25 @@ public class EvaluationService {
             return 0;
         }
         return Math.round((total / count) * 100.0) / 100.0;
+    }
+
+    private void addAnnotationIssues(Conversation conversation, Set<IssueDetected> issues, Double agreement) {
+        Double avgConfidence = agreementService.computeAverageConfidence(conversation.getFeedback());
+        if (agreement != null && agreement < AGREEMENT_THRESHOLD) {
+            IssueDetected issue = new IssueDetected();
+            issue.setType("annotator_disagreement");
+            issue.setSeverity(IssueSeverity.WARNING);
+            issue.setDescription("Annotator agreement " + agreement + " below threshold " + AGREEMENT_THRESHOLD +
+                    ". Route to human review.");
+            issues.add(issue);
+        }
+        if (avgConfidence != null && avgConfidence < CONFIDENCE_THRESHOLD) {
+            IssueDetected issue = new IssueDetected();
+            issue.setType("low_annotation_confidence");
+            issue.setSeverity(IssueSeverity.WARNING);
+            issue.setDescription("Average annotation confidence " + avgConfidence +
+                    " below threshold " + CONFIDENCE_THRESHOLD + ". Prefer human review.");
+            issues.add(issue);
+        }
     }
 }

@@ -23,4 +23,23 @@ public class FeedbackAgreementService {
         int max = labelCounts.values().stream().mapToInt(Integer::intValue).max().orElse(0);
         return Math.round((max / (double) annotations.size()) * 100.0) / 100.0;
     }
+
+    public Double computeAverageConfidence(Feedback feedback) {
+        if (feedback == null || feedback.getAnnotations() == null || feedback.getAnnotations().isEmpty()) {
+            return null;
+        }
+        List<Annotation> annotations = feedback.getAnnotations();
+        double total = 0;
+        int count = 0;
+        for (Annotation annotation : annotations) {
+            if (annotation.getConfidence() != null) {
+                total += annotation.getConfidence();
+                count++;
+            }
+        }
+        if (count == 0) {
+            return null;
+        }
+        return Math.round((total / count) * 100.0) / 100.0;
+    }
 }

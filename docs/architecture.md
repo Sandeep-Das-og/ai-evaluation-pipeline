@@ -15,6 +15,7 @@
   - Tool Call Evaluator
   - Multi-turn Coherence Evaluator
   - Heuristic checks (latency, required fields)
+- **Feedback Routing**: Detects annotator disagreement or low confidence and flags for human review
 - **Persistence**: PostgreSQL for conversations, feedback, evaluations, and suggestions
 - **Suggestions**: Rule-based generator tied to issue patterns
 

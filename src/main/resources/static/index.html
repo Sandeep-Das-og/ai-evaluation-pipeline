@@ -295,6 +295,7 @@
           <p>Select an endpoint and provide inputs specific to that action.</p>
           <div class="tabs" id="evalTabs">
             <div class="tab active" data-panel="panel-evaluate">Run Evaluation</div>
+            <div class="tab" data-panel="panel-batch">Batch Evaluation</div>
             <div class="tab" data-panel="panel-list">List Evaluations</div>
             <div class="tab" data-panel="panel-latest">Run Latest Evaluation</div>
             <div class="tab" data-panel="panel-suggestions">Check Latest Suggestions</div>
@@ -324,6 +325,19 @@
             <input id="listConversationId" placeholder="conv_abc123" />
             <div class="actions" style="margin-top: 12px;">
               <button id="btnList">Get Evaluations</button>
+            </div>
+          </div>
+
+          <div class="panel" id="panel-batch">
+            <label for="batchConversationIds">Conversation IDs (comma-separated)</label>
+            <input id="batchConversationIds" placeholder="conv_abc123, conv_def456" />
+            <label for="batchForce" style="margin-top: 12px;">Force Re-evaluate</label>
+            <select id="batchForce">
+              <option value="true">true</option>
+              <option value="false">false</option>
+            </select>
+            <div class="actions" style="margin-top: 12px;">
+              <button id="btnBatch">Run Batch Evaluation</button>
             </div>
           </div>
 
@@ -480,6 +494,29 @@
         if (!ensureConversationId(convId, evalStatus)) return;
         try {
           const res = await fetch("/api/v1/evaluations/" + convId);
+          const data = await res.json();
+          setStatus(evalStatus, "Status " + res.status);
+          setOutput(evalOutput, data);
+        } catch (err) {
+          setStatus(evalStatus, "Error: " + err.message);
+        }
+      });
+
+      document.getElementById("btnBatch").addEventListener("click", async () => {
+        setStatus(evalStatus, "Running batch evaluation...");
+        const rawIds = document.getElementById("batchConversationIds").value.trim();
+        if (!rawIds) {
+          setStatus(evalStatus, "Provide at least one conversationId.");
+          return;
+        }
+        const conversationIds = rawIds.split(",").map(id => id.trim()).filter(Boolean);
+        const force = document.getElementById("batchForce").value === "true";
+        try {
+          const res = await fetch("/api/v1/evaluations/batch", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ conversationIds, force })
+          });
           const data = await res.json();
           setStatus(evalStatus, "Status " + res.status);
           setOutput(evalOutput, data);

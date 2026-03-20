@@ -33,6 +33,13 @@ public class EvaluationMapper {
         toolEvaluation.setExecutionSuccess(evaluation.getExecutionSuccess());
         response.setToolEvaluation(toolEvaluation);
 
+        EvaluationResponse.Routing routing = new EvaluationResponse.Routing();
+        routing.setAgreement(evaluation.getAnnotatorAgreement());
+        Double avgConfidence = FeedbackRoutingUtil.averageConfidence(evaluation);
+        routing.setAverageConfidence(avgConfidence);
+        routing.setDecision(FeedbackRoutingUtil.routeDecision(evaluation.getAnnotatorAgreement(), avgConfidence));
+        response.setRouting(routing);
+
         Collection<IssueDetected> issues = Hibernate.isInitialized(evaluation.getIssues()) ? evaluation.getIssues() : List.of();
         response.setIssuesDetected(issues.stream().map(issue -> {
             EvaluationResponse.IssueDto dto = new EvaluationResponse.IssueDto();

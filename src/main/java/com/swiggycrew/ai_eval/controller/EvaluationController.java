@@ -2,6 +2,9 @@ package com.swiggycrew.ai_eval.controller;
 
 import com.swiggycrew.ai_eval.domain.Conversation;
 import com.swiggycrew.ai_eval.domain.Evaluation;
+import com.swiggycrew.ai_eval.model.BatchEvaluationFailure;
+import com.swiggycrew.ai_eval.model.BatchEvaluationRequest;
+import com.swiggycrew.ai_eval.model.BatchEvaluationResult;
 import com.swiggycrew.ai_eval.model.EvaluationResponse;
 import com.swiggycrew.ai_eval.repository.ConversationRepository;
 import com.swiggycrew.ai_eval.repository.EvaluationRepository;
@@ -37,6 +40,23 @@ public class EvaluationController {
                                                                    @RequestParam(defaultValue = "false") boolean force) {
         Evaluation evaluation = evaluationService.evaluateByConversationId(conversationId, force);
         return ResponseEntity.ok(EvaluationMapper.toResponse(evaluation));
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<BatchEvaluationResult> evaluateBatch(@RequestBody BatchEvaluationRequest request) {
+        BatchEvaluationResult result = new BatchEvaluationResult();
+        if (request.getConversationIds() == null || request.getConversationIds().isEmpty()) {
+            return ResponseEntity.ok(result);
+        }
+        for (String conversationId : request.getConversationIds()) {
+            try {
+                Evaluation evaluation = evaluationService.evaluateByConversationId(conversationId, request.isForce());
+                result.getEvaluations().add(EvaluationMapper.toResponse(evaluation));
+            } catch (Exception ex) {
+                result.getFailures().add(new BatchEvaluationFailure(conversationId, ex.getMessage()));
+            }
+        }
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/{conversationId}")

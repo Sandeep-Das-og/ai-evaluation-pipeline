@@ -7,6 +7,7 @@ public class EvaluationResponse {
     private String conversationId;
     private Scores scores;
     private ToolEvaluation toolEvaluation;
+    private Routing routing;
     private List<IssueDto> issuesDetected;
     private List<SuggestionDto> improvementSuggestions;
 
@@ -40,6 +41,14 @@ public class EvaluationResponse {
 
     public void setToolEvaluation(ToolEvaluation toolEvaluation) {
         this.toolEvaluation = toolEvaluation;
+    }
+
+    public Routing getRouting() {
+        return routing;
+    }
+
+    public void setRouting(Routing routing) {
+        this.routing = routing;
     }
 
     public List<IssueDto> getIssuesDetected() {
@@ -124,6 +133,36 @@ public class EvaluationResponse {
 
         public void setExecutionSuccess(Boolean executionSuccess) {
             this.executionSuccess = executionSuccess;
+        }
+    }
+
+    public static class Routing {
+        private String decision;
+        private Double agreement;
+        private Double averageConfidence;
+
+        public String getDecision() {
+            return decision;
+        }
+
+        public void setDecision(String decision) {
+            this.decision = decision;
+        }
+
+        public Double getAgreement() {
+            return agreement;
+        }
+
+        public void setAgreement(Double agreement) {
+            this.agreement = agreement;
+        }
+
+        public Double getAverageConfidence() {
+            return averageConfidence;
+        }
+
+        public void setAverageConfidence(Double averageConfidence) {
+            this.averageConfidence = averageConfidence;
         }
     }
 
