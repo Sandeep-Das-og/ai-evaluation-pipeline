@@ -194,6 +194,24 @@ Steps:
 2. Open the Codecov dashboard and select this repo.
 3. Use the latest commit view to see the summary and file-level breakdown.
 
+## Hosting (Render)
+
+This is a backend-only service, so the hosted URL will point to Swagger:
+`/swagger-ui/index.html`
+
+### Render Setup
+1. Create a **PostgreSQL** service in Render.
+2. Create a **Redis** service in Render.
+3. Create a **Web Service** from this repo and choose **Docker**.
+4. Set environment variables:
+   - `SPRING_DATASOURCE_URL` = Render PostgreSQL internal URL
+   - `SPRING_DATASOURCE_USERNAME` / `SPRING_DATASOURCE_PASSWORD`
+   - `SPRING_DATA_REDIS_URL` = Render Redis internal URL
+   - `APP_INGESTION_REALTIME_ENABLED=false` (no Kafka on Render)
+   - `SPRING_KAFKA_LISTENER_AUTO_STARTUP=false`
+5. Deploy. Your Swagger URL will be:
+   - `https://<your-render-service>.onrender.com/swagger-ui/index.html`
+
 ## Notes on LLM Integration
 This prototype uses a **rule-based LLM-as-Judge stub** by default. The evaluator interface is designed for easy replacement with real LLM calls when needed.
 
