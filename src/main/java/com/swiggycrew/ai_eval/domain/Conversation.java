@@ -1,5 +1,6 @@
 package com.swiggycrew.ai_eval.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class Conversation {
     private Feedback feedback;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Evaluation> evaluations = new ArrayList<>();
 
     public Long getId() {
