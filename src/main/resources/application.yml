@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aieval
+    username: aieval
+    password: aieval
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: ai-eval-pipeline
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+app:
+  ingestion:
+    realtime-enabled: true
+  eval:
+    llm-judge:
+      mode: stub
+      endpoint: http://localhost:9000/llm-judge
+      api-key: ""
+      timeout-ms: 1500
+      mock-enabled: false
+    latency-threshold-ms: 1000
+  suggestions:
+    min-pattern-count: 5

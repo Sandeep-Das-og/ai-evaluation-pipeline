@@ -1,0 +1,51 @@
+{
+  "conversationId": "conv_abc123",
+  "agentVersion": "v2.3.1",
+  "turns": [
+    {
+      "turnId": 1,
+      "role": "user",
+      "content": "I need to book a flight to NYC next week",
+      "timestamp": "2024-01-15T10:30:00Z"
+    },
+    {
+      "turnId": 2,
+      "role": "assistant",
+      "content": "I'd be happy to help you book a flight to NYC.",
+      "toolCalls": [
+        {
+          "toolName": "flight_search",
+          "parameters": {
+            "destination": "NYC",
+            "date_range": "2024-01-22/2024-01-28"
+          },
+          "result": {
+            "status": "success",
+            "flights": ["..."]
+          },
+          "latencyMs": 450
+        }
+      ],
+      "timestamp": "2024-01-15T10:30:02Z"
+    }
+  ],
+  "feedback": {
+    "userRating": 4,
+    "opsReview": {
+      "quality": "good",
+      "notes": "Correct tool usage"
+    },
+    "annotations": [
+      {
+        "type": "tool_accuracy",
+        "label": "correct",
+        "annotatorId": "ann_001",
+        "confidence": 0.9
+      }
+    ]
+  },
+  "metadata": {
+    "totalLatencyMs": 1200,
+    "missionCompleted": true
+  }
+}
