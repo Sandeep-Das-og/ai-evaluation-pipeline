@@ -175,7 +175,24 @@ Coverage reports:
 
 Workflow:
 - `.github/workflows/ci.yml`
-- Runs `./gradlew test` and uploads JaCoCo HTML report as an artifact
+- Runs `./gradlew build` on every push and PR
+- Uploads JaCoCo HTML report as an artifact (`jacoco-report`)
+- Uploads coverage XML to Codecov for a hosted summary
+
+### Viewing Coverage from GitHub Actions
+1. Open the GitHub Actions run for your commit/PR.
+2. Scroll to **Artifacts** and download `jacoco-report`.
+3. Unzip it and open `index.html` from the `jacoco-report` folder.
+
+Note: GitHub does not render the HTML report inline; you need to download the artifact.
+
+### Viewing Coverage Summary (Codecov)
+Codecov hosts a web summary for each push.
+
+Steps:
+1. Connect the repository to Codecov (public repos are free).
+2. Open the Codecov dashboard and select this repo.
+3. Use the latest commit view to see the summary and file-level breakdown.
 
 ## Notes on LLM Integration
 This prototype uses a **rule-based LLM-as-Judge stub** by default. The evaluator interface is designed for easy replacement with real LLM calls when needed.
