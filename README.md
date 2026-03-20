@@ -2,6 +2,13 @@
 
 This project implements a production-style evaluation pipeline for AI agents, including ingestion, automated evaluation, feedback integration, and self-improving suggestions.
 
+## Hosting (Render)
+
+The hosted app serves a minimal UI at the root URL and Swagger for full API docs.
+
+- UI: [https://swiggy-crew-app.onrender.com/](https://swiggy-crew-app.onrender.com/)
+- Swagger: [https://swiggy-crew-app.onrender.com/swagger-ui/index.html](https://swiggy-crew-app.onrender.com/swagger-ui/index.html)
+
 ## Architecture Overview
 
 Core pipeline:
@@ -179,38 +186,12 @@ Workflow:
 - Uploads JaCoCo HTML report as an artifact (`jacoco-report`)
 - Uploads coverage XML to Codecov for a hosted summary
 
-### Viewing Coverage from GitHub Actions
+### Viewing Code Coverage
 1. Open the GitHub Actions run for your commit/PR.
 2. Scroll to **Artifacts** and download `jacoco-report`.
 3. Unzip it and open `index.html` from the `jacoco-report` folder.
 
 Note: GitHub does not render the HTML report inline; you need to download the artifact.
-
-### Viewing Coverage Summary (Codecov)
-Codecov hosts a web summary for each push.
-
-Steps:
-1. Connect the repository to Codecov (public repos are free).
-2. Open the Codecov dashboard and select this repo.
-3. Use the latest commit view to see the summary and file-level breakdown.
-
-## Hosting (Render)
-
-This is a backend-only service, so the hosted URL will point to Swagger:
-`/swagger-ui/index.html`
-
-### Render Setup
-1. Create a **PostgreSQL** service in Render.
-2. Create a **Redis** service in Render.
-3. Create a **Web Service** from this repo and choose **Docker**.
-4. Set environment variables:
-   - `SPRING_DATASOURCE_URL` = Render PostgreSQL internal URL
-   - `SPRING_DATASOURCE_USERNAME` / `SPRING_DATASOURCE_PASSWORD`
-   - `SPRING_DATA_REDIS_URL` = Render Redis internal URL
-   - `APP_INGESTION_REALTIME_ENABLED=false` (no Kafka on Render)
-   - `SPRING_KAFKA_LISTENER_AUTO_STARTUP=false`
-5. Deploy. Your Swagger URL will be:
-   - `https://<your-render-service>.onrender.com/swagger-ui/index.html`
 
 ## Notes on LLM Integration
 This prototype uses a **rule-based LLM-as-Judge stub** by default. The evaluator interface is designed for easy replacement with real LLM calls when needed.
