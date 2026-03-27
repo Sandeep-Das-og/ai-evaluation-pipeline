@@ -6,8 +6,8 @@ This project implements a production-style evaluation pipeline for AI agents, in
 
 The hosted app serves a minimal UI at the root URL and Swagger for full API docs.
 
-- UI: [https://ai-eval-pipeline.onrender.com/](https://ai-eval-pipeline.onrender.com/)
-- Swagger: [https://ai-eval-pipeline.onrender.com/swagger-ui/index.html](https://ai-eval-pipeline.onrender.com/swagger-ui/index.html)
+- UI: [https://ai-evaluation-v4b8.onrender.com/](https://ai-evaluation-v4b8.onrender.com/)
+- Swagger: [https://ai-evaluation-v4b8.onrender.com/swagger-ui/index.html](https://ai-evaluation-v4b8.onrender.com/swagger-ui/index.html)
 
 ## Architecture Overview
 
